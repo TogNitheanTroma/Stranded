@@ -8,12 +8,13 @@ using(
 baglib = "4119d62e-6a98-4153-bea9-0a99bb36da2c"
 )
 LoadedBags = baglib.load_bags()
-library=load_jason(get_gvar(""))
+library=load_json(get_gvar(""))
 prey=randchoice(library.size)
 name=prey.name
 hp=roll(prey.hp)
 ac=prey.ac
-
+track=10+prey.dex
+stalk_roll=roll(1d20)+ch.
 LoadedBags.modify_item(
     self: LoadedBags,
     item: str = name,
