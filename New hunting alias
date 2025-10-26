@@ -1,0 +1,26 @@
+!alias ehunt embed
+<drac2>
+ch=character()
+size=&ARGS&
+ch.set_cvar_nx("last_hunt", time()-(get_svar("hunt_cooldown")+1))
+rested=1 if float(time())-float(last_hunt)>=get_svar("hunt_cooldown") else err("You can hunt again in !")
+using(
+baglib = "4119d62e-6a98-4153-bea9-0a99bb36da2c"
+)
+LoadedBags = baglib.load_bags()
+library=load_jason(get_gvar(""))
+prey=randchoice(library.size)
+name=prey.name
+hp=roll(prey.hp)
+ac=prey.ac
+
+LoadedBags.modify_item(
+    self: LoadedBags,
+    item: str = name,
+    quantity: +1,
+    bag_name: "Hunted Game",
+    create_on_fail: True,
+    recursive_search: bool = False,
+    delta: dict = {},
+    conversion_rates: dict = {}
+)
