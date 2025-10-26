@@ -1,0 +1,60 @@
+"tiny":{
+	"rat":{
+		"name":"rat",
+		"type":"beast",	
+		"track":5,
+		"ac":10,
+		"hp":1,
+		"parts": {"hide":8,"bones":8,"sinew":8,"entrails":8,"rat tail":8}
+		},
+	"squirrel":{
+		"name":"squirrel",
+		"type":"beast",	
+		"track":5,
+		"ac":10,
+		"hp":1,
+		"parts": {"hide":8,"bones":8,"sinew":8,"entrails":8}
+		},
+	"rabbit":{
+		"name":"rat",
+		"type":"beast",	
+		"track":10,
+		"ac":10,
+		"hp":1,
+		"parts": {"soft hide":8,"bones":8,"sinew":8,"entrails":8,"rabbit's foot":5}
+		},	
+	"fox":{
+		"name":"fox",
+		"type":"beast",	
+		"track":10,
+		"ac":10,
+		"hp":"1d4",
+		"parts": {"soft hide":10,"bones":10,"sinew":10,"entrails":10}
+		},
+	"badger":{
+		"name":"badger",
+		"type":"beast",	
+		"track":10,
+		"ac":11,
+		"hp":"1d4+3",
+		"parts": {"hide":10,"bones":10,"sinew":10,"entrails":10}
+		},
+	"bat":{
+		"name":"bat",
+		"type":"beast",	
+		"track":10,
+		"ac":11,
+		"hp":"1d4+3",
+		"parts": {"bones":10,"sinew":10,"entrails":10,"bat wings":14}
+		},
+},
+"small":{
+},
+"medium":{
+},
+"large":{
+},
+"huge":{
+}
+  
+
