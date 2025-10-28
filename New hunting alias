@@ -13,17 +13,17 @@ prey=randchoice(size)
 name=prey.name
 track_dc=roll("1d20").total+prey.dex
 track_roll=vroll(ch.skills["survival"].d20)
-if track_roll.total>=track
+if track_roll.total>=track:
     track_report="{{ch.name}} tracks down a {{name}}!"
     stealth_dc=roll("1d20").total+prey.perc
     stealth_roll=vroll(ch.skills["stealth"].d20)
-    if stealth_roll.total>=stealth_dc
+    if stealth_roll.total>=stealth_dc:
         stealth_report="{{ch.name}} sneaks up on the {{name}}..."
         attack_bonus=max(ch.strengthMod,ch.dexterityMod)+ch.proficiencyBonus
         attack_roll=vroll("1d20")
-        attack_roll_report="{{ch.name}} makes an attack! {{attack_roll.full}} + {{attack_bonus}}
+        attack_roll_report="{{ch.name}} makes an attack! {{attack_roll.full}} + {{attack_bonus}}"
         if attack_roll.total>=prey.ac
-            attack_report="{{ch.name}} hits the {{name}}!"
+            attack_report="{{ch.name}} hits the {{name}}!":
             LoadedBags.modify_item(
             self: LoadedBags,
             item: str = name,
@@ -35,13 +35,13 @@ if track_roll.total>=track
             conversion_rates: dict = {}
             )
             quarry="{{name}} was added to your bag!"
-        else
+        else:
             attack_report="{{ch.name}} misses, and the {{name}} flees into the brush!"
             end
-    else
+    else:
         stealth_report="{{ch.name}} startles the {{name}} and it runs away!"
         end
-else
+else:
     track_report="{{ch.name}} failed to track down any prey"
     end
 ch.set_cvar("last_hunt",time)
