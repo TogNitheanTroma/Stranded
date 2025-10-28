@@ -7,24 +7,48 @@ rested=1 if float(time())-float(last_hunt)>=get_svar("hunt_cooldown") else err("
 using(
 baglib = "4119d62e-6a98-4153-bea9-0a99bb36da2c"
 )
-
-library=load_json(get_gvar(""))
-prey=randchoice(library.size)
+library=load_json(get_gvar("d35d9307-b23a-4647-8986-b3c7701fd337"))
+size=[x for x in library if args.get('size').lower().replace(' ','') in x.lower()]
+prey=randchoice(size)
 name=prey.name
-hp=roll(prey.hp)
-ac=prey.ac
-track=10+prey.dex
-stalk_roll=vroll
-
-if stalk_roll>=track
-
-LoadedBags.modify_item(
-    self: LoadedBags,
-    item: str = name,
-    quantity: +1,
-    bag_name: "Hunted Game",
-    create_on_fail: True,
-    recursive_search: bool = False,
-    delta: dict = {},
-    conversion_rates: dict = {}
-)
+track_dc=roll("1d20").total+prey.dex
+track_roll=vroll(ch.skills["survival"].d20)
+if track_roll.total>=track
+    track_report="{{ch.name}} tracks down a {{name}}!"
+    stealth_dc=roll("1d20").total+prey.perc
+    stealth_roll=vroll(ch.skills["stealth"].d20)
+    if stealth_roll.total>=stealth_dc
+        stealth_report="{{ch.name}} sneaks up on the {{name}}..."
+        attack_bonus=max(ch.strengthMod,ch.dexterityMod)+ch.proficiencyBonus
+        attack_roll=vroll("1d20")
+        attack_roll_report="{{ch.name}} makes an attack! {{attack_roll.full}} + {{attack_bonus}}
+        if attack_roll.total>=prey.ac
+            attack_report="{{ch.name}} hits the {{name}}!"
+            LoadedBags.modify_item(
+            self: LoadedBags,
+            item: str = name,
+            quantity: +1,
+            bag_name: "Hunted Game",
+            create_on_fail: True,
+            recursive_search: bool = False,
+            delta: dict = {},
+            conversion_rates: dict = {}
+            )
+            quarry="{{name}} was added to your bag!"
+        else
+            attack_report="{{ch.name}} misses, and the {{name}} flees into the brush!"
+            end
+    else
+        stealth_report="{{ch.name}} startles the {{name}} and it runs away!"
+        end
+else
+    track_report="{{ch.name}} failed to track down any prey"
+    end
+ch.set_cvar("last_hunt",time)
+</drac2>
+-title "{{character().name}} goes hunting!"
+-f "{{track_report}}"
+-f "{{stealth_report}}"
+-f "{{attack_report}}"
+-f "{{quarry_report}}"
+-footer "!ehunt -size"
