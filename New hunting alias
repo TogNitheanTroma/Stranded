@@ -3,48 +3,45 @@
 ch=character()
 args=argparse(&ARGS&)
 ch.set_cvar_nx("last_hunt", time()-3601)
-rested=1 if float(time())-float(last_hunt)>=3600 else err("You can hunt again in !")
+rested=1 if float(time())-float(ch.get_cvar("last_hunt"))>=3600 else err("You can hunt again in !")
 using(
 baglib = "4119d62e-6a98-4153-bea9-0a99bb36da2c"
 )
 library=load_json(get_gvar("d35d9307-b23a-4647-8986-b3c7701fd337"))
-size=[x for x in library if args.last('size').lower().replace(' ','') in x.lower()]
-prey=randchoice(library[size])
+size= ([x for x in library if args.last('size').lower().replace(' ','') in x.lower()]+[None])[0]
+if not size:
+  err( "You need to enter a `-size!`\n\nPossible sizes are as follows: `{', '.join(library)}` ")
+prey_name = randchoice(list(library[size].keys()))
+prey = library[size][prey_name]
 name=prey.name
-track_dc=roll("1d20").total+prey.dex
-track_roll=vroll(ch.skills["survival"].d20)
-if track_roll.total>=track:
-    track_report="{{ch.name}} tracks down a {{name}}!"
-    stealth_dc=roll("1d20").total+prey.perc
-    stealth_roll=vroll(ch.skills["stealth"].d20)
+track_dc=roll("1d20")+prey.dex
+track_roll=vroll(ch.skills["survival"].d20())
+if track_roll.total>=track_dc:
+    report="{{ch.name}} tracks down a {{name}}!"
+    stealth_dc=roll("1d20")+prey.wis
+    stealth_roll=vroll(ch.skills["stealth"].d20())
     if stealth_roll.total>=stealth_dc:
-        stealth_report="{{ch.name}} sneaks up on the {{name}}..."
+        report=report+"/n/n{{ch.name}} sneaks up on the {{name}}..."
         attack_bonus=max(ch.strengthMod,ch.dexterityMod)+ch.proficiencyBonus
         attack_roll=vroll("1d20")
         attack_roll_report="{{ch.name}} makes an attack! {{attack_roll.full}} + {{attack_bonus}}"
         if attack_roll.total>=prey.ac:
-            attack_report="{{ch.name}} hits the {{name}}!"
+            report=report+"/n/n{{ch.name}} hits the {{name}}!"
             LoadedBags.modify_item(
             item= name,
             quantity= +1,
             bag_name= "Hunted Game",
             create_on_fail= True
             )
-            quarry="{{name}} was added to your bag!"
+            report=report+"/n/n{{name}} was added to your bag!"
         else:
-            attack_report="{{ch.name}} misses, and the {{name}} flees into the brush!"
-            end
+            report=report+"/n/n{{ch.name}} misses, and the {{name}} flees into the brush!"
     else:
-        stealth_report="{{ch.name}} startles the {{name}} and it runs away!"
-        end
+        report=report+"/n/n{{ch.name}} startles the {{name}} and it runs away!"
 else:
-    track_report="{{ch.name}} failed to track down any prey"
-    end
+    report=report+"/n/n{{ch.name}} failed to track down any prey"
 ch.set_cvar("last_hunt",time)
 </drac2>
 -title "{{character().name}} goes hunting for {{size}} prey!"
--f "{{track_report}}"
--f "{{stealth_report}}"
--f "{{attack_report}}"
--f "{{quarry_report}}"
+-f "{{report}}"
 -footer "!ehunt -size"
