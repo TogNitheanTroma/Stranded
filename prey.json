@@ -2,55 +2,63 @@
 	"rat":{
 		"name":"rat",
 		"type":"beast",	
-		"track":5,
+		"dex":0,
+		"wis":0,
 		"ac":10,
-		"hp":1,
-		"parts": {"hide":8,"bones":8,"sinew":8,"entrails":8,"rat tail":8}
+		"parts": {"hide":[14,1],"meat":[14,1],"bones":[14,1],"sinew":[14,1]}
 		},
-	"squirrel":{
-		"name":"squirrel",
+	"hare":{
+		"name":"hare",
 		"type":"beast",	
-		"track":5,
-		"ac":10,
-		"hp":1,
-		"parts": {"hide":8,"bones":8,"sinew":8,"entrails":8}
-		},
-	"rabbit":{
-		"name":"rat",
-		"type":"beast",	
-		"track":10,
-		"ac":10,
-		"hp":1,
-		"parts": {"soft hide":8,"bones":8,"sinew":8,"entrails":8,"rabbit's foot":5}
+		"dex":3,
+		"wis":0,
+		"ac":13,
+		"parts": {"meat":8,"hide":8,"bones":8,"sinew":8,"entrails":8,"rabbit's foot":5}
 		},	
 	"fox":{
 		"name":"fox",
 		"type":"beast",	
-		"track":10,
-		"ac":10,
-		"hp":"1d4",
-		"parts": {"soft hide":10,"bones":10,"sinew":10,"entrails":10}
+		"dex":3,
+		"wis":1,
+		"ac":13,
+		"parts": {"hide":10,"bones":10,"sinew":10,"entrails":10}
 		},
 	"badger":{
 		"name":"badger",
 		"type":"beast",	
-		"track":10,
+		"dex":0,
+		"wis":3,
 		"ac":11,
-		"hp":"1d4+3",
 		"parts": {"hide":10,"bones":10,"sinew":10,"entrails":10}
 		},
 	"bat":{
 		"name":"bat",
 		"type":"beast",	
-		"track":10,
+		"dex":2,
+		"wis":1,
 		"ac":11,
-		"hp":"1d4+3",
 		"parts": {"bones":10,"sinew":10,"entrails":10,"bat wings":14}
+		},	
+		"frog":{
+			"name":"frog",
+			"type":"beast",	
+			"dex":1,
+			"wis":-1,
+			"ac":11,
+			"parts": {"bones":10,"sinew":10,"entrails":10,"bat wings":14}
 		},
 },
 "small":{
 },
 "medium":{
+		"deer":{
+		"name":"deer",
+		"type":"beast",	
+		"dex":3,
+		"wis":2,
+		"ac":13,
+		"parts": {"bones":10,"sinew":10,"entrails":10,"bat wings":14}
+		}
 },
 "large":{
 },
