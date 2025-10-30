@@ -1,47 +1,56 @@
-!servalias ehunt embed
+!servalias hunt embed
 <drac2>
 ch=character()
 args=argparse(&ARGS&)
-ch.set_cvar_nx("last_hunt", time()-3601)
-rested=1 if float(time())-float(ch.get_cvar("last_hunt"))>=3600 else err("You can hunt again in !")
+cool=int(get_svar("hunt_cooldown",3600))
+ch.set_cvar_nx("last_hunt", floor(time())-cool+1)
+last=int(ch.get_cvar("last_hunt",3602))
+if last < floor(time())-cool:
+  rested=1
+else:
+  err( f"You can hunt again in {floor((last-time()+cool)/60)} minutes!")
 using(
-baglib = "4119d62e-6a98-4153-bea9-0a99bb36da2c"
+baglib = "5f1ffcbf-3f59-4396-b402-1ca0f02d6bbb"
 )
+bagsLoaded = baglib.LoadedBags()
 library=load_json(get_gvar("d35d9307-b23a-4647-8986-b3c7701fd337"))
 size= ([x for x in library if args.last('size').lower().replace(' ','') in x.lower()]+[None])[0]
 if not size:
-  err( "You need to enter a `-size!`\n\nPossible sizes are as follows: `{', '.join(library)}` ")
+  err( "You need to enter a `-size!`\n\nPossible sizes are as follows: `tiny, small, medium, large` ")
 prey_name = randchoice(list(library[size].keys()))
 prey = library[size][prey_name]
 name=prey.name
 track_dc=roll("1d20")+prey.dex
 track_roll=vroll(ch.skills["survival"].d20())
+report=f"Survival DC: {track_dc} \n Survival: {track_roll.full}"
 if track_roll.total>=track_dc:
-    report="{{ch.name}} tracks down a {{name}}!"
+    report=report+f"\n \n {ch.name} tracks down a **{name}**!"
     stealth_dc=roll("1d20")+prey.wis
     stealth_roll=vroll(ch.skills["stealth"].d20())
+    report=report+f"\n \n Stealth DC: {stealth_dc} \n Stealth: {stealth_roll.full}"
     if stealth_roll.total>=stealth_dc:
-        report=report+"/n/n{{ch.name}} sneaks up on the {{name}}..."
-        attack_bonus=max(ch.strengthMod,ch.dexterityMod)+ch.proficiencyBonus
+        report=report+f"\n \n {ch.name} sneaks up on the **{name}**..."
+        attack_bonus=max(strengthMod,dexterityMod)+proficiencyBonus
         attack_roll=vroll("1d20")
-        attack_roll_report="{{ch.name}} makes an attack! {{attack_roll.full}} + {{attack_bonus}}"
-        if attack_roll.total>=prey.ac:
-            report=report+"/n/n{{ch.name}} hits the {{name}}!"
-            LoadedBags.modify_item(
+        report=report+f"\n \n {ch.name} makes an attack! {attack_roll.full} + {attack_bonus} = {attack_roll.total+attack_bonus}"
+        if attack_roll.total+attack_bonus>=prey.ac:
+            report=report+f"\n \n {ch.name} hits the **{name}**!"
+            bagsLoaded.modify_item(
             item= name,
             quantity= +1,
             bag_name= "Hunted Game",
             create_on_fail= True
             )
-            report=report+"/n/n{{name}} was added to your bag!"
+            bagsLoaded.save_bags()
+            report=report+f"\n \n The **{name}** was added to your bag!"
         else:
-            report=report+"/n/n{{ch.name}} misses, and the {{name}} flees into the brush!"
+            report=report+f"\n \n {ch.name} misses, and the **{name}** flees into the brush!"
     else:
-        report=report+"/n/n{{ch.name}} startles the {{name}} and it runs away!"
+        report=report+f"\n \n {ch.name} startles the **{name}** and it runs away!"
 else:
-    report=report+"/n/n{{ch.name}} failed to track down any prey"
-ch.set_cvar("last_hunt",time)
+    report=report+f"\n \n {ch.name} failed to track down any prey"
+ch.set_cvar("last_hunt", floor(time()))
 </drac2>
 -title "{{character().name}} goes hunting for {{size}} prey!"
 -f "{{report}}"
--footer "!ehunt -size"
+-footer "!hunt -size [tiny, small, medium, large] | Made by Dudelsack Supreme"
