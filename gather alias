@@ -1,0 +1,57 @@
+!alias hunt embed
+<drac2>
+ch=character()
+args=argparse(&ARGS&)
+cool=int(get_svar("forage_cooldown",3600))
+ch.set_cvar_nx("last_forage", floor(time())-cool+1)
+last=int(ch.get_cvar("last_forage",3602))
+if last < floor(time())-cool:
+  rested=1
+else:
+  err( f"You can go foraging again in {floor((last-time()+cool)/60)} minutes!")
+using(
+baglib = "5f1ffcbf-3f59-4396-b402-1ca0f02d6bbb"
+)
+bagsLoaded = baglib.LoadedBags()
+library=load_json(get_gvar("d380ef38-a2ae-4782-8553-27e31b06e337))
+biome= ([x for x in library if args.last('biome').lower().replace(' ','') in x.lower()]+[None])[0]
+if not size:
+  err( f"You need to enter a `-biome`!\n\nPossible biomes are as follows: `{library.keys()}` ")
+category=(y for y in library[biome] if args.last
+dc=library[biome][dc]
+weights=library[biome][weights]
+desc,reward,amt = randchoices(library.biome.rewards,cum_weights=weights)
+report=f"{ch.name} goes foraging
+survival_roll=vroll(ch.skills["survival"].d20())
+report=f"Survival DC: {track_dc} \n Survival: {track_roll.full}"
+if track_roll.total>=track_dc:
+    report=report+f"\n \n {ch.name} tracks down a **{name}**!"
+    stealth_dc=roll("1d20")+prey.wis
+    stealth_roll=vroll(ch.skills["stealth"].d20())
+    report=report+f"\n \n Stealth DC: {stealth_dc} \n Stealth: {stealth_roll.full}"
+    if stealth_roll.total>=stealth_dc:
+        report=report+f"\n \n {ch.name} sneaks up on the **{name}**..."
+        attack_bonus=max(strengthMod,dexterityMod)+proficiencyBonus
+        attack_roll=vroll("1d20")
+        report=report+f"\n \n {ch.name} makes an attack! {attack_roll.full} + {attack_bonus} = {attack_roll.total+attack_bonus}"
+        if attack_roll.total+attack_bonus>=prey.ac:
+            report=report+f"\n \n {ch.name} hits the **{name}**!"
+            bagsLoaded.modify_item(
+            item= name,
+            quantity= +1,
+            bag_name= "Hunted Game",
+            create_on_fail= True
+            )
+            bagsLoaded.save_bags()
+            report=report+f"\n \n The **{name}** was added to your bag!"
+        else:
+            report=report+f"\n \n {ch.name} misses, and the **{name}** flees into the brush!"
+    else:
+        report=report+f"\n \n {ch.name} startles the **{name}** and it runs away!"
+else:
+    report=report+f"\n \n {ch.name} failed to track down any prey"
+ch.set_cvar("last_hunt", floor(time()))
+</drac2>
+-title "{{character().name}} goes hunting for {{size}} prey!"
+-f "{{report}}"
+-footer "!hunt -size [tiny, small, medium, large] | Made by Dudelsack Supreme"
